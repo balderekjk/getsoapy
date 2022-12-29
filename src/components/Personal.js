@@ -28,7 +28,6 @@ const Personal = ({ editable }) => {
     } else {
       setCurrentUId('0');
     }
-    console.log(currentUId);
     let data;
     setSoaps([]);
     if (editable) {
@@ -37,17 +36,17 @@ const Personal = ({ editable }) => {
           soapsCollectionRef,
           where('userId', '==', currentUId),
           orderBy('date', 'desc'),
-          limit(10)
+          limit(12)
         )
       );
     } else {
       data = await getDocs(
         query(
           soapsCollectionRef,
-          where('userId', '!=', currentUId),
-          orderBy('userId'),
+          // where('userId', '!=', currentUId),
+          // orderBy('userId'),
           orderBy('date', 'desc'),
-          limit(10)
+          limit(12)
         )
       );
     }
@@ -83,7 +82,7 @@ const Personal = ({ editable }) => {
             where('tag', '==', tagRef.current.value),
             where('userId', '==', currentUId),
             orderBy('date', 'desc'),
-            limit(10)
+            limit(12)
           )
         );
       } else {
@@ -91,10 +90,10 @@ const Personal = ({ editable }) => {
           query(
             soapsCollectionRef,
             where('tag', '==', tagRef.current.value),
-            where('userId', '!=', currentUId),
-            orderBy('userId'),
+            // where('userId', '!=', currentUId),
+            // orderBy('userId'),
             orderBy('date', 'desc'),
-            limit(10)
+            limit(12)
           )
         );
       }
@@ -178,6 +177,7 @@ const Personal = ({ editable }) => {
       {soaps.map((soap) => {
         return (
           <div
+            key={soap.id}
             className="card"
             style={{
               margin: '20px 0',
@@ -245,7 +245,6 @@ const Personal = ({ editable }) => {
           </div>
         );
       })}
-      {/* <div className="card">Personal</div> */}
     </div>
   );
 };
