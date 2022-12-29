@@ -57,7 +57,7 @@ const Reflect = () => {
         if (passed) {
           axios
             .get(
-              `https://bible-api.com/${bookRef.current.value} ${chapterRef.current.value}:${verseRef.current.value}?translation=oeb-us`
+              `https://bible-api.com/${bookRef.current.value} ${chapterRef.current.value}:${verseRef.current.value}`
             )
             .then(({ data }) => {
               setScripture(
@@ -73,7 +73,7 @@ const Reflect = () => {
       } else {
         axios
           .get(
-            `https://bible-api.com/${bookRef.current.value} ${chapterRef.current.value}?translation=oeb-us`
+            `https://bible-api.com/${bookRef.current.value} ${chapterRef.current.value}`
           )
           .then(({ data }) => {
             setScripture(

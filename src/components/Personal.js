@@ -9,6 +9,9 @@ import {
   limit,
   doc,
   deleteDoc,
+  startAfter,
+  endBefore,
+  limitToLast,
 } from 'firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
 import './Personal.module.css';
@@ -16,6 +19,8 @@ import './Personal.module.css';
 const Personal = ({ editable }) => {
   const [soaps, setSoaps] = useState([]);
   const [error, setError] = useState('');
+  const [last, setLast] = useState('');
+  const [first, setFirst] = useState('');
   const tagRef = useRef();
   const [isCancelOpt, setIsCancelOpt] = useState('');
   const soapsCollectionRef = collection(db, 'soaps');
@@ -36,18 +41,16 @@ const Personal = ({ editable }) => {
           soapsCollectionRef,
           where('userId', '==', currentUId),
           orderBy('date', 'desc'),
-          limit(12)
+          limit(10)
         )
       );
+      if (data.size) {
+        setLast(data.docs[data.docs.length - 1].data().date);
+        setFirst(data.docs[0].data().date);
+      }
     } else {
       data = await getDocs(
-        query(
-          soapsCollectionRef,
-          // where('userId', '!=', currentUId),
-          // orderBy('userId'),
-          orderBy('date', 'desc'),
-          limit(12)
-        )
+        query(soapsCollectionRef, orderBy('date', 'desc'), limit(12))
       );
     }
     setSoaps(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
@@ -72,6 +75,47 @@ const Personal = ({ editable }) => {
     }
   };
 
+  const handlePaginate = async (direction) => {
+    let data;
+    if (direction === '>') {
+      try {
+        data = await getDocs(
+          query(
+            soapsCollectionRef,
+            where('userId', '==', currentUId),
+            orderBy('date', 'desc'),
+            startAfter(last),
+            limit(10)
+          )
+        );
+      } catch (err) {
+        throw Error(err);
+      }
+    } else {
+      try {
+        data = await getDocs(
+          query(
+            soapsCollectionRef,
+            where('userId', '==', currentUId),
+            orderBy('date', 'desc'),
+            endBefore(first),
+            limitToLast(10)
+          )
+        );
+      } catch (err) {
+        throw Error(err);
+      }
+    }
+    if (data.size) {
+      setLast(data.docs[data.docs.length - 1].data().date);
+      setFirst(data.docs[0].data().date);
+      setSoaps([]);
+      setSoaps(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    } else {
+      setErrorTimer('None down yonder');
+    }
+  };
+
   const handleFilter = async () => {
     let data;
     if (tagRef.current.value !== 'Default') {
@@ -82,7 +126,7 @@ const Personal = ({ editable }) => {
             where('tag', '==', tagRef.current.value),
             where('userId', '==', currentUId),
             orderBy('date', 'desc'),
-            limit(12)
+            limit(10)
           )
         );
       } else {
@@ -90,8 +134,6 @@ const Personal = ({ editable }) => {
           query(
             soapsCollectionRef,
             where('tag', '==', tagRef.current.value),
-            // where('userId', '!=', currentUId),
-            // orderBy('userId'),
             orderBy('date', 'desc'),
             limit(12)
           )
@@ -245,6 +287,20 @@ const Personal = ({ editable }) => {
           </div>
         );
       })}
+      {editable && (
+        <div
+          style={{
+            display: 'flex',
+            width: '50vw',
+            justifyContent: 'space-between',
+            marginBottom: '20px',
+          }}
+        >
+          <button onClick={() => handlePaginate('<')}>{'<'}</button>
+          <div style={{ fontSize: '0.8em' }}>{error && error}</div>
+          <button onClick={() => handlePaginate('>')}>{'>'}</button>
+        </div>
+      )}
     </div>
   );
 };
