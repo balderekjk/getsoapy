@@ -50,6 +50,7 @@ const Reflect = () => {
   };
 
   const getScripture = () => {
+    setError('');
     if (chapterRef.current.value) {
       if (verseRef.current.value) {
         let verse = verseRef.current.value;
