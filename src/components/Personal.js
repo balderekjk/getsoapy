@@ -135,7 +135,7 @@ const Personal = ({ editable }) => {
             soapsCollectionRef,
             where('tag', '==', tagRef.current.value),
             orderBy('date', 'desc'),
-            limit(12)
+            limit(10)
           )
         );
       }
