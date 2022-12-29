@@ -2,7 +2,7 @@
 
 body {
   margin: 0;
-  background: radial-gradient(white 40%, hsl(239, 100%, 75%));
+  background: radial-gradient(white 40%, hsl(239, 100%, 85%));
 }
 
 form > * {
