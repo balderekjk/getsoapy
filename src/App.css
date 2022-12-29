@@ -2,7 +2,7 @@
 
 body {
   margin: 0;
-  background: radial-gradient(white 40%, hsl(239, 100%, 85%));
+  background: radial-gradient(white 50%, hsl(239, 100%, 75%));
 }
 
 form > * {
@@ -77,6 +77,10 @@ textarea {
 }
 
 @media screen and (max-width: 600px) {
+  body {
+    background: radial-gradient(white 65%, hsl(239, 100%, 85%));
+  }
+
   .card {
     margin-top: 20px;
     max-width: 80vw;
