@@ -33,12 +33,16 @@ const Navbar = () => {
           <li onClick={() => setIsMenuOpen(false)}>
             <Link to="/explore">Explore</Link>
           </li>
-          <li onClick={() => setIsMenuOpen(false)}>
-            <Link to="/reflect">Reflect</Link>
-          </li>
-          <li onClick={() => setIsMenuOpen(false)}>
-            <Link to="/personal">Personal</Link>
-          </li>
+          {currentUser && (
+            <>
+              <li onClick={() => setIsMenuOpen(false)}>
+                <Link to="/reflect">Reflect</Link>
+              </li>
+              <li onClick={() => setIsMenuOpen(false)}>
+                <Link to="/personal">Personal</Link>
+              </li>
+            </>
+          )}
           <li
             onClick={() => {
               if (currentUser) {

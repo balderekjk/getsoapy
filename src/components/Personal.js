@@ -20,15 +20,22 @@ const Personal = ({ editable }) => {
   const [isCancelOpt, setIsCancelOpt] = useState('');
   const soapsCollectionRef = collection(db, 'soaps');
   const { currentUser } = useAuth();
+  const [currentUId, setCurrentUId] = useState('0');
 
   const getSoaps = async () => {
+    if (currentUser) {
+      setCurrentUId(currentUser.uid);
+    } else {
+      setCurrentUId('0');
+    }
+    console.log(currentUId);
     let data;
     setSoaps([]);
     if (editable) {
       data = await getDocs(
         query(
           soapsCollectionRef,
-          where('userId', '==', currentUser.uid),
+          where('userId', '==', currentUId),
           orderBy('date', 'desc'),
           limit(10)
         )
@@ -37,7 +44,7 @@ const Personal = ({ editable }) => {
       data = await getDocs(
         query(
           soapsCollectionRef,
-          where('userId', '!=', currentUser.uid),
+          where('userId', '!=', currentUId),
           orderBy('userId'),
           orderBy('date', 'desc'),
           limit(10)
@@ -49,7 +56,7 @@ const Personal = ({ editable }) => {
 
   useEffect(() => {
     getSoaps();
-  }, [editable]);
+  }, [editable, currentUId]);
 
   const setErrorTimer = (err) => {
     setError(err);
@@ -74,7 +81,7 @@ const Personal = ({ editable }) => {
           query(
             soapsCollectionRef,
             where('tag', '==', tagRef.current.value),
-            where('userId', '==', currentUser.uid),
+            where('userId', '==', currentUId),
             orderBy('date', 'desc'),
             limit(10)
           )
@@ -84,7 +91,7 @@ const Personal = ({ editable }) => {
           query(
             soapsCollectionRef,
             where('tag', '==', tagRef.current.value),
-            where('userId', '!=', currentUser.uid),
+            where('userId', '!=', currentUId),
             orderBy('userId'),
             orderBy('date', 'desc'),
             limit(10)
