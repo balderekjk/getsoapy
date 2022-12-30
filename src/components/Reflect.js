@@ -171,7 +171,7 @@ const Reflect = () => {
               <option value="2 John">2 John</option>
               <option value="3 John">3 John</option>
               <option value="Jude">Jude</option>
-              <option value="Jude">Jude</option>
+              <option value="Revelation">Revelation</option>
             </select>
             <input
               type="number"
